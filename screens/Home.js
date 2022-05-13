@@ -10,7 +10,7 @@ import {Icon} from 'react-native-elements';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {launchImageLibrary} from 'react-native-image-picker';
 
-const userID = 11;
+const userID = 10;
 
 const GET_USER = gql`
   query getUser($getUserId: ID!) {
@@ -41,6 +41,7 @@ function HomeScreen({navigation}) {
   const [name, setName] = useState('Byung Hoo');
   const [designation, setDesignation] = useState('Photographer');
   const [website, setWebsite] = useState('www.me.com');
+  const [color, setColor] = useState('gold');
 
   const {error, data, loading} = useQuery(GET_USER, {
     variables: {getUserId: userID},
@@ -74,6 +75,7 @@ function HomeScreen({navigation}) {
           },
         });
         setImage(assets[0].uri);
+        setColor('gold');
       }
     } catch (error) {
       console.log(error);
@@ -85,11 +87,14 @@ function HomeScreen({navigation}) {
       <View>
         <TouchableOpacity
           onLongPress={changeImage}
-          onPress={() => navigation.navigate('Story')}>
+          onPress={() => {
+            navigation.navigate('Story');
+            setColor('gray');
+          }}>
           <ImageBackground
             source={{uri: image}}
             resizeMode="cover"
-            style={styles.image}
+            style={{...styles.image, borderColor: color}}
           />
         </TouchableOpacity>
         <View style={styles.story}>
@@ -98,7 +103,10 @@ function HomeScreen({navigation}) {
             name="circle-with-plus"
             color="gold"
             size={30}
-            onPress={() => navigation.navigate('Story')}
+            onPress={() => {
+              navigation.navigate('Story');
+              setColor('gray');
+            }}
           />
         </View>
       </View>
@@ -137,7 +145,6 @@ const styles = StyleSheet.create({
     borderRadius: 200 / 2,
     overflow: 'hidden',
     borderWidth: 3,
-    borderColor: 'gold',
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
